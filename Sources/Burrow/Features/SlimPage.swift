@@ -12,10 +12,10 @@ struct SlimPage: View {
         VStack(alignment: .leading, spacing: 20) {
             HeroCard(glow: .magenta, label: "Intel code in universal apps", bytes: scan.report?.bytes,
                      detail: "Each app is slimmed on a copy that must pass code signing and Gatekeeper first. App updates bring the Intel code back.",
-                     scanning: scan.scanning, progress: "Reading the architecture of every app",
+                     scanning: scan.scanning, progress: localized("Reading the architecture of every app"),
                      started: scan.startedAt, checked: scan.finishedAt, error: scan.error) {
                 ScanButton(scanning: scan.scanning, start: scan.start, stop: scan.cancel)
-                Button(allSelected ? "Select none" : "Select all") {
+                Button(localized(allSelected ? "Select none" : "Select all")) {
                     selected = allSelected ? [] : Set((scan.report?.apps ?? []).map(\.name))
                 }
                 .buttonStyle(.pillSecondary)
@@ -47,7 +47,7 @@ struct SlimPage: View {
             }
         }
         .bottomBar(!selected.isEmpty) {
-            SelectionBar(glow: .magenta, title: "\(selected.count) app\(selected.count == 1 ? "" : "s") · \(selectedBytes.bytesText)",
+            SelectionBar(glow: .magenta, title: localizedFormat("\(selected.count) app\(selected.count == 1 ? "" : "s") · \(selectedBytes.bytesText)"),
                          subtitle: "Originals go to the Trash after the slim copy passes its checks.",
                          clear: { selected.removeAll() }) {
                 Button("Slim apps") { slim() }.buttonStyle(.pill)

@@ -39,7 +39,7 @@ struct HistoryPage: View {
             } else {
                 EmptyState(symbol: "clock", text: all.isEmpty ? "Nothing yet." : "No changes yet.",
                            detail: all.isEmpty ? "Runs appear here after you clean, uninstall or optimize."
-                                               : "\(all.count) previews ran, but nothing was changed.",
+                                               : localizedFormat("\(all.count) previews ran, but nothing was changed."),
                            actionTitle: all.isEmpty ? nil : "Show previews") { showPreviews = true }
             }
         }
@@ -48,7 +48,8 @@ struct HistoryPage: View {
 
     private var summary: String {
         let hidden = all.count - sessions.count
-        return "\(sessions.count) run\(sessions.count == 1 ? "" : "s")" + (hidden > 0 ? " · \(hidden) previews hidden" : "")
+        if hidden > 0 { return localizedFormat("\(sessions.count) run\(sessions.count == 1 ? "" : "s") · \(hidden) previews hidden") }
+        return localizedFormat("\(sessions.count) run\(sessions.count == 1 ? "" : "s")")
     }
 
     private func row(_ s: HistoryResult.Session, last: Bool) -> some View {
@@ -63,18 +64,18 @@ struct HistoryPage: View {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 6) {
                         HStack(spacing: 8) {
-                            Text(s.title).cardTitle()
-                            if s.isPreview { Tag(text: "Preview") }
-                            if s.looksInterrupted { Tag(text: "Interrupted", color: .orange) }
+                            Text(localized: s.title).cardTitle()
+                            if s.isPreview { Tag(text: localized("Preview")) }
+                            if s.looksInterrupted { Tag(text: localized("Interrupted"), color: .orange) }
                         }
                         Text(s.when).caption()
                         if let a = s.actions {
                             HStack(spacing: 6) {
-                                if let n = a.removed, n > 0 { Tag(text: "\(n) removed", color: Theme.accent) }
-                                if let n = a.trashed, n > 0 { Tag(text: "\(n) to Trash") }
-                                if let n = a.skipped, n > 0, !s.isPreview { Tag(text: "\(n) skipped", color: .orange) }
-                                if let n = a.failed, n > 0 { Tag(text: "\(n) failed", color: Theme.danger) }
-                                if let n = a.rebuilt, n > 0 { Tag(text: "\(n) rebuilt", color: Glow.blue.color) }
+                                if let n = a.removed, n > 0 { Tag(text: localizedFormat("\(n) removed"), color: Theme.accent) }
+                                if let n = a.trashed, n > 0 { Tag(text: localizedFormat("\(n) to Trash")) }
+                                if let n = a.skipped, n > 0, !s.isPreview { Tag(text: localizedFormat("\(n) skipped"), color: .orange) }
+                                if let n = a.failed, n > 0 { Tag(text: localizedFormat("\(n) failed"), color: Theme.danger) }
+                                if let n = a.rebuilt, n > 0 { Tag(text: localizedFormat("\(n) rebuilt"), color: Glow.blue.color) }
                             }
                         }
                     }

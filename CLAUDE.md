@@ -13,6 +13,26 @@ folders or memories.
 - `Sources/Burrow/Features`: one file per page; long-lived scans and stores live in `AppModel`.
 - `Vendor/mole`: the bundled Mole engine (`VERSION` file). Do not edit it; update it as a whole.
 - `scripts/bundle.sh` builds `build/Burrow.app` (release binary + Mole + icon, ad-hoc signed).
+- `Resources/zh-Hans.lproj/Localizable.strings`: the ONLY translation table (Simplified Chinese).
+
+## Localization
+- UI language follows the macOS system language: `zh-Hans`/`zh-Hans-CN`/`zh-CN` → Chinese; every
+  other language (incl. `zh-Hant*`, `en`, `ja`, …) → English. No in-app switch, no `AppleLanguages`
+  writes, no `en.lproj`. `CFBundleDevelopmentRegion = en` (set in `scripts/bundle.sh`) makes the
+  fallback deterministic; `scripts/bundle.sh` copies `Resources/.` into `Contents/Resources/` before
+  codesign so `Bundle.main` finds the `.lproj`.
+- English UI copy IS the key; a missing key falls back to the English text. Never translate engine/
+  protocol strings (Mole commands/flags, parser anchors, PTY prompt match words, JSON keys, paths,
+  units, brand names) — the deny-list lives in `scripts/check-strings.sh` and design.md D4.
+- `Sources/Burrow/Design/LocalizedText.swift`: `localized(_ key: String)` for plain keys/`String`
+  variables, `Text(localized:)` for `String` in SwiftUI, and **`localizedFormat(_: String.LocalizationValue)`
+  for ANY copy containing a runtime interpolation** (`"\(size) free"`). Do NOT route interpolated
+  copy through `localized(...)`: overload resolution falls to the `String` version, materializes the
+  whole English sentence as the key and silently misses the `"%@ free"` entry. `String.LocalizationValue`
+  produces the same `%@`/`%lld`/`%lf` keys SwiftUI literals use. `scripts/check-strings.sh` fails on
+  such misuse and the LocalizationTests cover the mechanism + fallback.
+- Add UI copy to the table when you add new on-screen English text; keep model/parser values English
+  and localize only at the display site (protects `ParserTests` assertions).
 
 ## Build rules
 - Xcode Command Line Tools only, no Xcode: `swift build`, `swift test`, `scripts/bundle.sh`.

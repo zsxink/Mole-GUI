@@ -65,8 +65,8 @@ struct PageHeader: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(page.title).font(.system(size: 34, weight: .semibold)).foregroundStyle(.white)
-            Text(page.subtitle).font(.system(size: 14)).foregroundStyle(Theme.secondaryText)
+            Text(localized: page.title).font(.system(size: 34, weight: .semibold)).foregroundStyle(.white)
+            Text(localized: page.subtitle).font(.system(size: 14)).foregroundStyle(Theme.secondaryText)
         }
     }
 }
@@ -118,7 +118,7 @@ private struct SidebarItem: View {
             HStack(spacing: 11) {
                 Image(systemName: page.symbol).font(.system(size: 14, weight: .medium)).frame(width: 20)
                     .symbolEffect(.bounce, value: selected)
-                Text(page.title).font(.system(size: 14, weight: selected ? .semibold : .regular))
+                Text(localized: page.title).font(.system(size: 14, weight: selected ? .semibold : .regular))
                 Spacer()
                 if busy {
                     PulseDot(color: selected ? page.glow.color : Theme.accent)
@@ -141,9 +141,9 @@ private struct SidebarItem: View {
         .onHover { hover = $0 }
         .animation(Motion.spring, value: selected)
         .animation(Motion.quick, value: busy)
-        .help(page.title + "  ⌘" + String(page.shortcut.character))
+        .help(localized(page.title) + "  ⌘" + String(page.shortcut.character))
         .accessibilityAddTraits(selected ? .isSelected : [])
-        .accessibilityValue(busy ? "Scanning" : "")
+        .accessibilityValue(busy ? localized("Scanning") : "")
     }
 }
 

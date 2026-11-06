@@ -62,9 +62,10 @@ struct CleanPage: View {
     }
 
     private var detail: String {
-        guard let report = scan.report else { return "Mole previews everything first. Nothing is removed until you press Clean." }
+        guard let report = scan.report else { return localized("Mole previews everything first. Nothing is removed until you press Clean.") }
+        // Mole's own tally is data (kept as-is); only Burrow's sentence is localizable copy.
         let tally = report.tally.map { $0 + ". " } ?? ""
-        return tally + "Files listed twice below are counted once."
+        return tally + localized("Files listed twice below are counted once.")
     }
 
     private var progress: String {
@@ -73,10 +74,11 @@ struct CleanPage: View {
 
     private func askToClean() {
         let size = (scan.report?.total.bytesText ?? "") + (scan.report?.potentialIsLowerBound == true ? "+" : "")
-        confirm = .init(title: "Clean \(size)?",
-                        message: "Mole removes the caches and logs listed here. Protected paths are skipped."
-                            + (includeSystem ? " System caches need your administrator password." : ""),
-                        button: "Clean") {
+        confirm = .init(title: localizedFormat("Clean \(size)?"),
+                        message: localized(includeSystem
+                            ? "Mole removes the caches and logs listed here. Protected paths are skipped. System caches need your administrator password."
+                            : "Mole removes the caches and logs listed here. Protected paths are skipped."),
+                        button: localized("Clean")) {
             model.run("Cleaning your Mac", ["clean"], plan: scan.report?.total,
                       responders: [.when("System caches need sudo", send: includeSystem ? "\r" : " ")]) {
                 scan.start()
@@ -93,10 +95,10 @@ struct ScanButton: View {
     let stop: () -> Void
 
     var body: some View {
-        Button(scanning ? "Stop" : title) { scanning ? stop() : start() }
+        Button(localized(scanning ? "Stop" : title)) { scanning ? stop() : start() }
             .buttonStyle(.pillSecondary)
             .keyboardShortcut("r", modifiers: .command)
-            .help(scanning ? "Stop the scan (⌘R)" : "Scan again (⌘R)")
+            .help(localized(scanning ? "Stop the scan (⌘R)" : "Scan again (⌘R)"))
     }
 }
 
@@ -126,7 +128,7 @@ struct OptimizePage: View {
                                     Label("Mole could not finish", systemImage: "exclamationmark.triangle.fill")
                                         .font(.system(size: 24, weight: .semibold)).symbolRenderingMode(.multicolor)
                                 } else if scan.report == nil {
-                                    Text(scan.scanning ? "Checking…" : "Not checked yet")
+                                    Text(scan.scanning ? localized("Checking…") : localized("Not checked yet"))
                                         .font(.system(size: 26, weight: .medium)).shimmer(scan.scanning)
                                 } else {
                                     MetricValue(value: "\(pendingSteps)", unit: pendingSteps == 1 ? "step to run" : "steps to run", dot: 7)
@@ -180,10 +182,10 @@ struct OptimizePage: View {
     }
 
     private var footnote: String {
-        if scan.scanning { return scan.section.isEmpty ? "Mole is looking at your system…" : "Checking \(scan.section)" }
+        if scan.scanning { return scan.section.isEmpty ? localized("Mole is looking at your system…") : localizedFormat("Checking \(scan.section)") }
         if let error = scan.error { return error }
         if let tally = scan.report?.summary.first(where: { $0.contains("unchanged") }) { return tally.replacingOccurrences(of: " | ", with: " · ") }
-        return "Finder, DNS, Spotlight, preferences and more. Mole asks before anything needs your password."
+        return localized("Finder, DNS, Spotlight, preferences and more. Mole asks before anything needs your password.")
     }
 
     /// Steps Mole would run, from its "Would apply N optimizations" summary.

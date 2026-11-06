@@ -120,19 +120,20 @@ private struct RemovalOffer: View {
 
     private var bytes: Int64 { leftovers.map(\.bytes).reduce(0, +) }
     private var title: String {
-        leftovers.count == 1 ? "\(name(0)) was removed" : "\(leftovers.count) apps were removed"
+        if leftovers.count == 1 { return localizedFormat("\(name(0)) was removed") }
+        return localizedFormat("\(leftovers.count) apps were removed")
     }
     private var detail: String {
         switch step {
         case .offer, .cleaning:
-            let kinds = Set(leftovers.flatMap(\.kinds)).map(\.rawValue).sorted().joined(separator: ", ").lowercased()
-            return "It left \(bytes.bytesText) behind: \(kinds)."
+            let kinds = Set(leftovers.flatMap(\.kinds)).map(\.displayName).sorted().joined(separator: ", ")
+            return localizedFormat("It left \(bytes.bytesText) behind: \(kinds).")
         case .done(_, let failed) where failed > 0:
-            return "\(failed) item\(failed == 1 ? "" : "s") could not be moved. Open Burrow to see them."
+            return localizedFormat("\(failed) item\(failed == 1 ? "" : "s") could not be moved. Open Burrow to see them.")
         case .done(let moved, _) where moved == 0:
-            return "Nothing was moved: the app is back, or its files are in use again."
+            return localized("Nothing was moved: the app is back, or its files are in use again.")
         case .done(let moved, _):
-            return "Moved \(moved.bytesText) to the Trash. You can put it back from there."
+            return localizedFormat("Moved \(moved.bytesText) to the Trash. You can put it back from there.")
         }
     }
 

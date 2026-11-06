@@ -140,10 +140,10 @@ struct OverviewPage: View {
                 HStack {
                     Text("Free space").cardTitle()
                     Spacer()
-                    if let p = disk?.purgeable, p > 0 { Tag(text: "\(p.bytesText) purgeable") }
+                    if let p = disk?.purgeable, p > 0 { Tag(text: localizedFormat("\(p.bytesText) purgeable")) }
                 }
                 Spacer()
-                MetricValue(value: free.metric.value, unit: free.metric.unit + " free", dot: 7, live: true)
+                MetricValue(value: free.metric.value, unit: localizedFormat("\(free.metric.unit) free"), dot: 7, live: true)
                 Spacer()
                 DotMeter(value: used, count: 48)
                 HStack {
@@ -194,7 +194,7 @@ struct OverviewPage: View {
                 HStack {
                     Text("Memory").cardTitle()
                     Spacer()
-                    if let p = monitor.pressure, p != .normal { Tag(text: "Pressure \(p.label.lowercased())", color: p.color) }
+                    if let p = monitor.pressure, p != .normal { Tag(text: localizedFormat("Pressure: \(localized(p.label))"), color: p.color) }
                 }
                 .frame(height: 24)
                 MetricValue(value: String(format: "%.0f", m?.used_percent ?? 0), unit: "%", dot: 4.5, live: true)
@@ -217,9 +217,9 @@ struct OverviewPage: View {
                         .lineLimit(1)
                 } else {
                     Image(systemName: "powerplug").font(.system(size: 30, weight: .light))
-                    Text(s == nil ? "–" : "No battery, on power").caption()
+                    Text(s == nil ? "–" : localized("No battery, on power")).caption()
                 }
-                if let w = s?.thermal?.system_power, w > 0 { Text(String(format: "Drawing %.1f W", w)).caption() }
+                if let w = s?.thermal?.system_power, w > 0 { Text(localizedFormat("Drawing \(String(format: "%.1f", w)) W")).caption() }
                 Spacer(minLength: 0)
             }
         }
@@ -236,7 +236,7 @@ struct OverviewPage: View {
                 // A floor of 1 MB/s keeps an idle line flat instead of blowing tiny noise up to full height.
                 BarSpark(values: monitor.rxHistory, color: Theme.accent, maxValue: max(monitor.rxHistory.max() ?? 0, 1))
                     .frame(height: 34)
-                Text(String(format: "%.2f MB/s out", tx)).caption()
+                Text(localizedFormat("\(String(format: "%.2f", tx)) MB/s out")).caption()
                 Spacer(minLength: 0)
             }
         }
@@ -248,14 +248,14 @@ struct OverviewPage: View {
                 HStack {
                     Text("Busiest processes").cardTitle()
                     Spacer()
-                    Text(s?.uptime.map { "Up \($0)" } ?? "").caption()
+                    Text(s?.uptime.map { localizedFormat("Up \($0)") } ?? "").caption()
                 }
                 ForEach(s?.top_processes ?? []) { p in
                     HStack {
                         Text(p.name).font(.system(size: 13)).lineLimit(1)
                         Spacer()
                         DotMeter(value: min(p.cpu / 100, 1), count: 16, color: p.cpu > 80 ? Glow.ember.color : .white)
-                        Text(String(format: "%.0f%%", p.cpu)).font(.system(size: 12)).monospacedDigit()
+                        Text(String(format: "%.0f", p.cpu) + "%").font(.system(size: 12)).monospacedDigit()
                             .foregroundStyle(Theme.secondaryText).frame(width: 46, alignment: .trailing)
                     }
                     .accessibilityElement(children: .combine)
@@ -280,13 +280,13 @@ struct QuickAction: View {
             GlowCard(glow: glow, style: .core, padding: 16) {
                 HStack(spacing: 12) {
                     VStack(alignment: .leading, spacing: 3) {
-                        Text(title).caption()
+                        Text(localized: title).caption()
                         HStack(spacing: 8) {
-                            Text(value).font(.system(size: 20, weight: .semibold)).foregroundStyle(.white)
+                            Text(localized: value).font(.system(size: 20, weight: .semibold)).foregroundStyle(.white)
                                 .monospacedDigit().contentTransition(.numericText())
                             if busy { PulseDot() }
                         }
-                        if !detail.isEmpty { Text(detail).font(.system(size: 11)).foregroundStyle(Theme.tertiaryText).lineLimit(1) }
+                        if !detail.isEmpty { Text(localized: detail).font(.system(size: 11)).foregroundStyle(Theme.tertiaryText).lineLimit(1) }
                     }
                     Spacer()
                     Image(systemName: "arrow.up.right")
@@ -327,7 +327,7 @@ struct ScanQuickAction<Report>: View {
 
     private var detail: String {
         if scan.scanning { return "Found so far" }
-        if let at = scan.finishedAt { return "Checked \(at.formatted(.relative(presentation: .named)))" }
+        if let at = scan.finishedAt { return localizedFormat("Checked \(at.formatted(.relative(presentation: .named)))") }
         return scan.error == nil ? "Scan to see what Mole can free" : "The last scan did not finish"
     }
 }
@@ -340,7 +340,7 @@ struct InstallersQuickAction: View {
         let files = store.files ?? []
         QuickAction(title: "Old installers",
                     value: store.files == nil ? "Looking…" : files.map(\.bytes).reduce(0, +).bytesText,
-                    detail: store.files == nil ? "" : "\(files.count) file\(files.count == 1 ? "" : "s") in Downloads and more",
+                    detail: store.files == nil ? "" : localizedFormat("\(files.count) file\(files.count == 1 ? "" : "s") in Downloads and more"),
                     busy: store.scanning, glow: .ember, action: action)
     }
 }

@@ -100,7 +100,7 @@ struct UninstallPage: View {
     private var installed: some View {
         VStack(alignment: .leading, spacing: 20) {
             HStack(spacing: 12) {
-                SearchField(text: $query, prompt: catalog.apps.isEmpty ? "Search apps" : "Search \(catalog.apps.count) apps",
+                SearchField(text: $query, prompt: catalog.apps.isEmpty ? localized("Search apps") : localizedFormat("Search \(catalog.apps.count) apps"),
                             focused: $searchFocused)
                 PillPicker(selection: $sortBySize, options: [("Largest", true), ("A–Z", false)])
                 if let at = catalog.checkedAt, !catalog.loading { CheckedAgo(date: at) }
@@ -121,7 +121,7 @@ struct UninstallPage: View {
                     EmptyState(symbol: "app.dashed", text: "No apps found.")
                 }
             } else if visible.isEmpty {
-                EmptyState(symbol: "magnifyingglass", text: "No app matches “\(query)”.", actionTitle: "Clear search") { query = "" }
+                EmptyState(symbol: "magnifyingglass", text: localizedFormat("No app matches “\(query)”."), actionTitle: "Clear search") { query = "" }
             } else {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 210), spacing: 14)], spacing: 14) {
                     ForEach(visible) { app in
@@ -155,7 +155,7 @@ struct UninstallPage: View {
     }
 
     private var actionBar: some View {
-        SelectionBar(glow: .ember, title: "\(chosen.count) selected · \(chosenBytes.bytesText)",
+        SelectionBar(glow: .ember, title: localizedFormat("\(chosen.count) selected · \(chosenBytes.bytesText)"),
                      subtitle: chosen.prefix(3).map(\.name).joined(separator: ", ") + (chosen.count > 3 ? "…" : ""),
                      clear: { selected.removeAll() }) {
             Toggle("Personal data too", isOn: $withData).toggleStyle(.switch).controlSize(.small)
@@ -175,10 +175,10 @@ struct UninstallPage: View {
     private var flags: [String] { (withData ? ["--with-data"] : []) + (permanent ? ["--permanent"] : []) }
 
     private func askToUninstall() {
-        confirm = .init(title: "Uninstall \(chosen.count) app\(chosen.count == 1 ? "" : "s")?",
-                        message: permanent ? "Apps and their leftovers are deleted for good. Mole shows the full list and asks once more." :
-                            "Apps and their leftovers go to the Trash, so you can still restore them. Mole shows the full list and asks once more.",
-                        button: "Uninstall") {
+        confirm = .init(title: localizedFormat("Uninstall \(chosen.count) app\(chosen.count == 1 ? "" : "s")?"),
+                        message: localized(permanent ? "Apps and their leftovers are deleted for good. Mole shows the full list and asks once more." :
+                            "Apps and their leftovers go to the Trash, so you can still restore them. Mole shows the full list and asks once more."),
+                        button: localized("Uninstall")) {
             model.run("Uninstalling", ["uninstall"] + flags + names, plan: chosenBytes) {
                 selected.removeAll()
                 Task {
@@ -200,7 +200,7 @@ private struct AppTile: View {
             AppIcon(path: app.path, size: 40)
             VStack(alignment: .leading, spacing: 3) {
                 Text(app.name).font(.system(size: 13.5, weight: .medium)).lineLimit(1)
-                Text(app.bytes.map(\.bytesText) ?? "Size unknown").caption().monospacedDigit()
+                Text(app.bytes.map(\.bytesText) ?? localized("Size unknown")).caption().monospacedDigit()
             }
         }
         .contextMenu {
@@ -218,7 +218,7 @@ struct SearchField: View {
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass").foregroundStyle(Theme.secondaryText)
-            TextField(prompt, text: $text).textFieldStyle(.plain).focused(focused)
+            TextField(localized(prompt), text: $text).textFieldStyle(.plain).focused(focused)
                 .onExitCommand { text = "" }
             if !text.isEmpty {
                 Button { text = "" } label: { Image(systemName: "xmark.circle.fill") }

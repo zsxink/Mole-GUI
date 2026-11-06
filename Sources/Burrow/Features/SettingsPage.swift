@@ -69,15 +69,15 @@ struct SettingsPage: View {
                             Label("Touch ID for admin steps", systemImage: "touchid").cardTitle()
                             Spacer()
                             switch touchID {
-                            case true?: Tag(text: "On", color: Theme.accent)
-                            case false?: Tag(text: "Off")
+                            case true?: Tag(text: localized("On"), color: Theme.accent)
+                            case false?: Tag(text: localized("Off"))
                             case nil: PulseDot(color: .white)
                             }
                         }
                         Text("Approve Mole's administrator steps with your fingerprint instead of typing the password. Changing it asks for your password once.").caption()
                         Spacer(minLength: 0)
                         if let on = touchID {
-                            Button(on ? "Turn off" : "Turn on") {
+                            Button(localized(on ? "Turn off" : "Turn on")) {
                                 model.run("Touch ID for sudo", ["touchid", on ? "disable" : "enable"]) {
                                     touchID = nil
                                     Task { await checkTouchID() }
@@ -165,10 +165,10 @@ private struct PathListCard: View {
     var body: some View {
         GlowCard(glow: glow, style: .plain) {
             VStack(alignment: .leading, spacing: 12) {
-                Text(title).cardTitle()
-                Text(caption).caption()
+                Text(localized: title).cardTitle()
+                Text(localized: caption).caption()
                 if !warning.isEmpty {
-                    Label(warning, systemImage: "exclamationmark.triangle.fill")
+                    Label(localized(warning), systemImage: "exclamationmark.triangle.fill")
                         .font(.system(size: 11.5)).foregroundStyle(.orange)
                 }
                 HStack {

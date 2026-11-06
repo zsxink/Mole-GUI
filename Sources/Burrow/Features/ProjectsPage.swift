@@ -25,7 +25,7 @@ struct ProjectsPage: View {
             HeroCard(glow: .blue, label: scan.scanning ? (report == nil ? "Scanning" : "Found so far") : "Build folders found", bytes: report?.bytes,
                      detail: "node_modules, .next, dist, target, .venv and other folders a reinstall or build brings back.",
                      scanning: scan.scanning || removing,
-                     progress: removing ? "Moving folders to the Trash…" : scan.status.isEmpty ? "" : "Looking in \(scan.status)",
+                     progress: removing ? localized("Moving folders to the Trash…") : scan.status.isEmpty ? "" : localizedFormat("Looking in \(scan.status)"),
                      started: scan.startedAt, checked: scan.finishedAt, error: scan.error) {
                 ScanButton(scanning: scan.scanning, start: rescan, stop: scan.cancel).disabled(removing)
                 Button { model.page = .settings } label: { Label("Scan folders", systemImage: "folder.badge.gearshape") }
@@ -53,7 +53,7 @@ struct ProjectsPage: View {
                     Text("\(groups.count) projects · \(report.artifacts.count) folders").caption()
                     Spacer()
                     if !scan.scanning {
-                        Button(selected.count == report.artifacts.count ? "Select none" : "Select all") {
+                        Button(localized(selected.count == report.artifacts.count ? "Select none" : "Select all")) {
                             selected = selected.count == report.artifacts.count ? [] : Set(report.artifacts.map(\.path))
                         }
                         .buttonStyle(.pillSecondary)
@@ -72,7 +72,7 @@ struct ProjectsPage: View {
             }
         }
         .bottomBar(!selected.isEmpty && !scan.scanning) {
-            SelectionBar(glow: .blue, title: "\(selected.count) folder\(selected.count == 1 ? "" : "s") · \(selectedBytes.bytesText)",
+            SelectionBar(glow: .blue, title: localizedFormat("\(selected.count) folder\(selected.count == 1 ? "" : "s") · \(selectedBytes.bytesText)"),
                          subtitle: everythingSelected ? "Mole removes them; a reinstall or build brings them back."
                                                       : "They go to the Trash; a reinstall or build brings them back.",
                          clear: { selected.removeAll() }) {
@@ -111,7 +111,7 @@ struct ProjectsPage: View {
             }
             .contentShape(Rectangle())
             .onTapGesture { toggleExpanded(project) }
-            .accessibilityAction(named: expanded.contains(project) ? "Collapse" : "Expand") { toggleExpanded(project) }
+            .accessibilityAction(named: localized(expanded.contains(project) ? "Collapse" : "Expand")) { toggleExpanded(project) }
             if expanded.contains(project) {
                 ForEach(artifacts) { a in
                     HStack(spacing: 12) {
@@ -155,18 +155,18 @@ struct ProjectsPage: View {
 
     private func askToRemove() {
         if everythingSelected {
-            confirm = .init(title: "Remove all \(selected.count) build folders?",
-                            message: "\(selectedBytes.bytesText). Mole deletes them with its own safety checks and shows its final count before it starts.",
-                            button: "Continue") {
+            confirm = .init(title: localizedFormat("Remove all \(selected.count) build folders?"),
+                            message: localizedFormat("\(selectedBytes.bytesText). Mole deletes them with its own safety checks and shows its final count before it starts."),
+                            button: localized("Continue")) {
                 // Mole's selector opens with exactly these folders ticked (recent ones stay off);
                 // Enter accepts it, then Mole asks for the final confirmation in the sheet.
                 model.run("Removing build folders", ["purge"], plan: selectedBytes,
                           responders: [.when("Select Artifacts to Purge", send: "\r")]) { rescan() }
             }
         } else {
-            confirm = .init(title: "Move \(selected.count) build folder\(selected.count == 1 ? "" : "s") to the Trash?",
-                            message: "\(selectedBytes.bytesText). You can restore them from the Trash; a reinstall or build also recreates them.",
-                            button: "Move to Trash") { trashSelected() }
+            confirm = .init(title: localizedFormat("Move \(selected.count) build folder\(selected.count == 1 ? "" : "s") to the Trash?"),
+                            message: localizedFormat("\(selectedBytes.bytesText). You can restore them from the Trash; a reinstall or build also recreates them."),
+                            button: localized("Move to Trash")) { trashSelected() }
         }
     }
 

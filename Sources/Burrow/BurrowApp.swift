@@ -33,7 +33,7 @@ struct BurrowApp: App {
             }
             CommandMenu("Go") {
                 ForEach(Page.allCases) { page in
-                    Button(page.title) { model.page = page }
+                    Button { model.page = page } label: { Text(localized: page.title) }
                         .keyboardShortcut(page.shortcut, modifiers: .command)
                 }
             }
@@ -150,10 +150,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         guard let session = MainActor.assumeIsolated({ model?.session }), !session.isFinished, session.runsMole else { return .terminateNow }
         let alert = NSAlert()
-        alert.messageText = "Mole is still working"
-        alert.informativeText = "“\(session.title)” has not finished. Quitting stops it where it is."
-        alert.addButton(withTitle: "Keep Working")
-        alert.addButton(withTitle: "Stop and Quit")
+        alert.messageText = localized("Mole is still working")
+        alert.informativeText = localizedFormat("“\(session.title)” has not finished. Quitting stops it where it is.")
+        alert.addButton(withTitle: localized("Keep Working"))
+        alert.addButton(withTitle: localized("Stop and Quit"))
         alert.buttons[1].hasDestructiveAction = true
         return alert.runModal() == .alertSecondButtonReturn ? .terminateNow : .terminateCancel
     }

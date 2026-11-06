@@ -17,7 +17,7 @@ struct TrayView: View {
                 Text("Burrow").font(.system(size: 14, weight: .semibold))
                 Spacer()
                 if let score = s?.health_score {
-                    Tag(text: "Health \(score)", color: score >= 70 ? Theme.accent : score >= 45 ? .orange : Theme.danger)
+                    Tag(text: localizedFormat("Health \(score)"), color: score >= 70 ? Theme.accent : score >= 45 ? .orange : Theme.danger)
                 }
             }
             .padding(.horizontal, 4)
@@ -43,7 +43,7 @@ struct TrayView: View {
                         clean: canClean ? { open(.clean); model.askCleanAt = Date() } : nil) { open(.clean) }
                 row("Leftovers of removed apps", value: leftoversValue, busy: leftovers.scanning, page: .uninstall)
                 row("Old installers", value: model.installers.files.map { $0.map(\.bytes).reduce(0, +).bytesText }
-                        ?? (model.installers.scanning ? "Looking…" : "Not checked"),
+                        ?? localized(model.installers.scanning ? "Looking…" : "Not checked"),
                     busy: model.installers.scanning, page: .installers)
             }
             .padding(6)
@@ -98,10 +98,12 @@ struct TrayView: View {
                     Spacer()
                     Image(systemName: "arrow.up.right").font(.system(size: 11, weight: .bold)).foregroundStyle(Theme.secondaryText)
                 }
-                MetricValue(value: disk == nil ? "-" : free.metric.value, unit: (disk == nil ? "GB" : free.metric.unit) + " free",
+                MetricValue(value: disk == nil ? "-" : free.metric.value,
+                            unit: localizedFormat("\(disk == nil ? "GB" : free.metric.unit) free"),
                             dot: 4.5, live: true)
                 DotMeter(value: disk.map { Double($0.used) / Double(max($0.total, 1)) } ?? 0, count: 34)
-                Text(disk.map { "\($0.used.bytesText) used of \($0.total.bytesText)" } ?? "Reading the disk…").caption()
+                Text(disk.map { localizedFormat("\($0.used.bytesText) used of \($0.total.bytesText)") }
+                        ?? localized("Reading the disk…")).caption()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -116,11 +118,11 @@ struct TrayView: View {
             GlowCard(glow: glow, style: .core, padding: 12) {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(spacing: 4) {
-                        Text(title).font(.system(size: 11)).foregroundStyle(Theme.secondaryText).lineLimit(1)
+                        Text(localized: title).font(.system(size: 11)).foregroundStyle(Theme.secondaryText).lineLimit(1)
                         Spacer(minLength: 0)
                         // Only pressure that matters is shown, in words: a full RAM is normal on a Mac.
                         if let pressure, pressure != .normal {
-                            Text(pressure.label).font(.system(size: 10, weight: .semibold)).foregroundStyle(pressure.color)
+                            Text(localized: pressure.label).font(.system(size: 10, weight: .semibold)).foregroundStyle(pressure.color)
                         }
                     }
                     MetricValue(value: value ?? "-", unit: unit, dot: 3, live: true)
@@ -131,8 +133,8 @@ struct TrayView: View {
         }
         .buttonStyle(.plain).hoverLift()
         .accessibilityElement(children: .combine)
-        .accessibilityValue(pressure.map { "Memory pressure \($0.label)" } ?? "")
-        .accessibilityHint("Opens Overview")
+        .accessibilityValue(pressure.map { localizedFormat("Memory pressure: \(localized($0.label))") } ?? "")
+        .accessibilityHint(localized("Opens Overview"))
     }
 
     private func row(_ title: String, value: String, busy: Bool, page: Page) -> some View {
@@ -146,12 +148,12 @@ struct TrayView: View {
 
     private func scanValue<R>(_ scan: Scan<R>, _ bytes: KeyPath<R, Int64>) -> String {
         if let r = scan.report { return r[keyPath: bytes].bytesText }
-        return scan.scanning ? "Scanning…" : "Not scanned"
+        return localized(scan.scanning ? "Scanning…" : "Not scanned")
     }
 
     private var leftoversValue: String {
-        guard let all = leftovers.leftovers else { return leftovers.scanning ? "Looking…" : "Not checked" }
-        return all.isEmpty ? "None" : all.map(\.bytes).reduce(0, +).bytesText
+        guard let all = leftovers.leftovers else { return localized(leftovers.scanning ? "Looking…" : "Not checked") }
+        return all.isEmpty ? localized("None") : all.map(\.bytes).reduce(0, +).bytesText
     }
 }
 
@@ -170,7 +172,7 @@ private struct TrayRow: View {
         HStack(spacing: 8) {
             Button(action: action) {
                 HStack(spacing: 8) {
-                    Text(title).font(.system(size: 13))
+                    Text(localized: title).font(.system(size: 13))
                     Spacer()
                     if busy { PulseDot() }
                     Text(value).font(.system(size: 13, weight: .medium)).monospacedDigit().foregroundStyle(Theme.secondaryText)
@@ -181,12 +183,12 @@ private struct TrayRow: View {
             }
             .buttonStyle(.plain)
             .onHover { hover = $0 }
-            .accessibilityLabel("\(title), \(value)")
+            .accessibilityLabel("\(localized(title)), \(value)")
             if let clean {
                 Button("Clean", action: clean)
                     .buttonStyle(PillButtonStyle(kind: .secondary, compact: true))
-                    .accessibilityLabel("Clean \(title.lowercased()), \(value)")
-                    .accessibilityHint("Asks before Mole cleans")
+                    .accessibilityLabel(localizedFormat("Clean \(localized(title)) · \(value)"))
+                    .accessibilityHint(localized("Asks before Mole cleans"))
             }
         }
         .padding(.horizontal, 10)

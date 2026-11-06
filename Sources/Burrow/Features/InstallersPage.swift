@@ -80,13 +80,13 @@ struct InstallersPage: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             HeroCard(glow: .ember, label: "Installer files", bytes: files.map { _ in total },
-                     detail: files.map { "\($0.count) disk image\($0.count == 1 ? "" : "s") and packages in Downloads, Desktop, Mail and Telegram." }
-                        ?? "Looks in Downloads, Desktop, Documents, Mail and Telegram.",
-                     scanning: store.scanning, progress: "Looking in Downloads, Desktop, Mail and Telegram",
+                     detail: files.map { localizedFormat("\($0.count) disk image\($0.count == 1 ? "" : "s") and packages in Downloads, Desktop, Mail and Telegram.") }
+                        ?? localized("Looks in Downloads, Desktop, Documents, Mail and Telegram."),
+                     scanning: store.scanning, progress: localized("Looking in Downloads, Desktop, Mail and Telegram"),
                      checked: store.checkedAt) {
                 Button("Rescan") { Task { await load() } }.buttonStyle(.pillSecondary).disabled(store.scanning)
                     .keyboardShortcut("r", modifiers: .command)
-                Button(allSelected ? "Select none" : "Select all") {
+                Button(localized(allSelected ? "Select none" : "Select all")) {
                     selected = allSelected ? [] : Set((files ?? []).map(\.path))
                 }
                 .buttonStyle(.pillSecondary)
@@ -94,8 +94,10 @@ struct InstallersPage: View {
             }
 
             if !failed.isEmpty {
-                Label("\(failed.count) file\(failed.count == 1 ? "" : "s") could not be moved to the Trash: "
-                      + failed.map { ($0 as NSString).lastPathComponent }.prefix(3).joined(separator: ", "),
+                // One localizedFormat with a single interpolation: the old `+` concatenation forced
+                // the String overload, so the whole English sentence became an unresolvable key.
+                let names = failed.map { ($0 as NSString).lastPathComponent }.prefix(3).joined(separator: ", ")
+                Label(localizedFormat("\(failed.count) file\(failed.count == 1 ? "" : "s") could not be moved to the Trash: \(names)"),
                       systemImage: "exclamationmark.triangle.fill")
                     .font(.system(size: 12.5)).foregroundStyle(Theme.danger)
             }
@@ -122,7 +124,7 @@ struct InstallersPage: View {
             }
         }
         .bottomBar(!selected.isEmpty) {
-            SelectionBar(glow: .ember, title: "\(selected.count) file\(selected.count == 1 ? "" : "s") · \(selectedBytes.bytesText)",
+            SelectionBar(glow: .ember, title: localizedFormat("\(selected.count) file\(selected.count == 1 ? "" : "s") · \(selectedBytes.bytesText)"),
                          subtitle: "They go to the Trash, so you can put them back.", clear: { selected.removeAll() }) {
                 Button("Move to Trash") { askToTrash() }.buttonStyle(.pill)
             }
@@ -141,9 +143,9 @@ struct InstallersPage: View {
     }
 
     private func askToTrash() {
-        confirm = .init(title: "Move \(selected.count) installer\(selected.count == 1 ? "" : "s") to the Trash?",
-                        message: "\(selectedBytes.bytesText). You can restore them from the Trash.",
-                        button: "Move to Trash") {
+        confirm = .init(title: localizedFormat("Move \(selected.count) installer\(selected.count == 1 ? "" : "s") to the Trash?"),
+                        message: localizedFormat("\(selectedBytes.bytesText). You can restore them from the Trash."),
+                        button: localized("Move to Trash")) {
             failed = Trash.move(Array(selected))
             selected.removeAll()
             Task { await load() }

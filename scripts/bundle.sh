@@ -19,6 +19,7 @@ mkdir -p "$APP/Contents/Frameworks"
 ditto "$(dirname "$BIN")/Sparkle.framework" "$APP/Contents/Frameworks/Sparkle.framework"
 cp -R Vendor/mole "$APP/Contents/Resources/mole"
 cp LICENSE "$APP/Contents/Resources/LICENSE"
+cp -R Resources/. "$APP/Contents/Resources/"   # zh-Hans.lproj: Bundle.main finds it at runtime
 
 # Icon: render once, then build the .icns with every size macOS asks for.
 ICONSET="$(mktemp -d)/Burrow.iconset"
@@ -45,6 +46,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
     <key>CFBundleExecutable</key><string>Burrow</string>
     <key>CFBundleIconFile</key><string>Burrow</string>
     <key>CFBundlePackageType</key><string>APPL</string>
+    <key>CFBundleDevelopmentRegion</key><string>en</string>
     <key>CFBundleShortVersionString</key><string>$VERSION</string>
     <key>CFBundleVersion</key><string>$VERSION</string>
     <key>MoleVersion</key><string>$MOLE_VERSION</string>

@@ -2,7 +2,10 @@ import SwiftUI
 
 /// What apps that are gone left in ~/Library: folders and files named after their bundle id.
 struct Leftover: Identifiable, Hashable {
-    enum Kind: String { case cache = "Cache", logs = "Logs", state = "Window state", web = "Web data", data = "App data", settings = "Settings" }
+    enum Kind: String { case cache = "Cache", logs = "Logs", state = "Window state", web = "Web data", data = "App data", settings = "Settings"
+        /// `rawValue` stays English for sorting and identity; this is what the UI shows.
+        var displayName: String { localized(rawValue) }
+    }
     struct Item: Hashable { let path: String; let kind: Kind; let bytes: Int64 }
 
     var id: String { bundleID }
@@ -377,12 +380,12 @@ struct LeftoversView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             HeroCard(glow: .ember, label: "Leftovers of removed apps", bytes: store.leftovers.map { $0.map(\.bytes).reduce(0, +) },
-                     detail: (store.leftovers.map { "\($0.count) app\($0.count == 1 ? " that is" : "s that are") gone left files behind. " } ?? "")
-                        + "Caches, logs and web data unused for a week; settings and data too while the app is in the Trash or was just deleted. Everything goes to the Trash.",
-                     scanning: store.scanning, progress: "Looking through your Library", checked: store.checkedAt) {
+                     detail: (store.leftovers.map { localizedFormat("\($0.count) app\($0.count == 1 ? " that is" : "s that are") gone left files behind. ") } ?? "")
+                        + localized("Caches, logs and web data unused for a week; settings and data too while the app is in the Trash or was just deleted. Everything goes to the Trash."),
+                     scanning: store.scanning, progress: localized("Looking through your Library"), checked: store.checkedAt) {
                 Button("Rescan") { Task { await store.load() } }.buttonStyle(.pillSecondary).disabled(store.scanning)
                     .keyboardShortcut("r", modifiers: .command)
-                Button(allSelected ? "Select none" : "Select all") {
+                Button(localized(allSelected ? "Select none" : "Select all")) {
                     selected = allSelected ? [] : Set(all.map(\.id))
                 }
                 .buttonStyle(.pillSecondary)
@@ -412,7 +415,7 @@ struct LeftoversView: View {
                             Text(left.name).font(.system(size: 13, weight: .medium)).lineLimit(1)
                             Text(left.bundleID).font(.system(size: 11, design: .monospaced))
                                 .foregroundStyle(Theme.tertiaryText).lineLimit(1).truncationMode(.middle)
-                            Text("Changed \(left.lastUsed.formatted(.relative(presentation: .named))) · \(left.kinds.map(\.rawValue).joined(separator: ", "))")
+                            Text("Changed \(left.lastUsed.formatted(.relative(presentation: .named))) · \(left.kinds.map(\.displayName).joined(separator: ", "))")
                                 .caption().lineLimit(1)
                         }
                         Spacer(minLength: 8)
@@ -422,7 +425,7 @@ struct LeftoversView: View {
                     .contextMenu {
                         Text(left.bundleID)
                         ForEach(left.items, id: \.path) { item in
-                            Button("Show \(item.kind.rawValue.lowercased()) in Finder") {
+                            Button("Show \(item.kind.displayName) in Finder") {
                                 NSWorkspace.shared.selectFile(item.path, inFileViewerRootedAtPath: "")
                             }
                         }
@@ -431,7 +434,7 @@ struct LeftoversView: View {
             }
         }
         .bottomBar(!selected.isEmpty) {
-            SelectionBar(glow: .ember, title: "\(chosen.count) app\(chosen.count == 1 ? "" : "s") · \(chosen.map(\.bytes).reduce(0, +).bytesText)",
+            SelectionBar(glow: .ember, title: localizedFormat("\(chosen.count) app\(chosen.count == 1 ? "" : "s") · \(chosen.map(\.bytes).reduce(0, +).bytesText)"),
                          subtitle: "Their leftovers go to the Trash, so you can put them back.", clear: { selected.removeAll() }) {
                 Button("Move to Trash") { askToTrash() }.buttonStyle(.pill)
             }
@@ -447,9 +450,9 @@ struct LeftoversView: View {
 
     private func askToTrash() {
         let items = chosen.flatMap(\.items).count
-        confirm = .init(title: "Move what \(chosen.count) removed app\(chosen.count == 1 ? "" : "s") left to the Trash?",
-                        message: "\(items) item\(items == 1 ? "" : "s"), \(chosen.map(\.bytes).reduce(0, +).bytesText). You can restore them from the Trash.",
-                        button: "Move to Trash") {
+        confirm = .init(title: localizedFormat("Move what \(chosen.count) removed app\(chosen.count == 1 ? "" : "s") left to the Trash?"),
+                        message: localizedFormat("\(items) item\(items == 1 ? "" : "s"), \(chosen.map(\.bytes).reduce(0, +).bytesText). You can restore them from the Trash."),
+                        button: localized("Move to Trash")) {
             let picked = chosen
             selected.removeAll()
             Task { failed = await store.trash(picked) }

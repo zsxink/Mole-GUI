@@ -191,8 +191,10 @@ struct CheckedAgo: View {
     var body: some View {
         TimelineView(.everyMinute) { context in
             // Seconds would sit stale between minute ticks.
-            Text(context.date.timeIntervalSince(date) < 60 ? "Checked just now"
-                 : "Checked \(date.formatted(.relative(presentation: .named)))").caption()
+            let ago = date.formatted(.relative(presentation: .named))
+            return Text(context.date.timeIntervalSince(date) < 60
+                        ? localized("Checked just now")
+                        : localizedFormat("Checked \(ago)")).caption()
         }
     }
 }
@@ -219,7 +221,7 @@ struct HeroCard<Actions: View>: View {
             VStack(alignment: .leading, spacing: 14) {
                 // One fixed-height title row in every state, so the badge never pushes the value down.
                 HStack {
-                    Text(label).cardTitle()
+                    Text(localized: label).cardTitle()
                     Spacer()
                     if scanning {
                         ScanningBadge(started: started).transition(.blurFade)
@@ -260,14 +262,14 @@ struct HeroCard<Actions: View>: View {
 
     @ViewBuilder private var footnote: some View {
         if scanning {
-            Text(progress.isEmpty ? "Mole is starting…" : progress)
+            Text(progress.isEmpty ? localized("Mole is starting…") : progress)
                 .caption().lineLimit(1).truncationMode(.middle)
                 .contentTransition(.opacity)
                 .animation(Motion.quick, value: progress)
         } else if let error {
             Text(error).font(.system(size: 12)).foregroundStyle(Theme.danger).lineLimit(2)
         } else {
-            Text(detail).caption().lineLimit(2)
+            Text(localized: detail).caption().lineLimit(2)
         }
     }
 }
@@ -357,12 +359,12 @@ struct ReportRow: View {
             switch item.kind {
             case .action:
                 if let b = item.bytes, b > 0 { Text(b.bytesText).font(.system(size: 12.5)).monospacedDigit() }
-            case .info: Tag(text: "Manual", color: Glow.blue.color).help("Mole lists this but leaves it to you")
+            case .info: Tag(text: localized("Manual"), color: Glow.blue.color).help("Mole lists this but leaves it to you")
             case .skipped where needsDiskAccess:
                 Button("Open Settings") { NSWorkspace.shared.open(Self.fullDiskAccess) }
                     .buttonStyle(.link).font(.system(size: 12, weight: .medium))
                     .help("Privacy & Security → Full Disk Access: turn on Burrow, then scan again")
-            case .skipped: Tag(text: "Skipped", color: .orange)
+            case .skipped: Tag(text: localized("Skipped"), color: .orange)
             case .ok: EmptyView()
             }
         }
@@ -421,12 +423,12 @@ struct EmptyState: View {
         VStack(spacing: 12) {
             Image(systemName: symbol).font(.system(size: 30, weight: .light))
                 .symbolEffect(.pulse, options: .repeating, isActive: symbol == "hourglass" && !Motion.reduced)
-            Text(text).font(.system(size: 14, weight: .medium)).foregroundStyle(.white.opacity(0.85))
+            Text(localized: text).font(.system(size: 14, weight: .medium)).foregroundStyle(.white.opacity(0.85))
             if !detail.isEmpty {
-                Text(detail).font(.system(size: 12)).frame(maxWidth: 420).lineLimit(3)
+                Text(localized: detail).font(.system(size: 12)).frame(maxWidth: 420).lineLimit(3)
             }
             if let actionTitle, let action {
-                Button(actionTitle, action: action).buttonStyle(.pillSecondary).padding(.top, 4)
+                Button(localized(actionTitle), action: action).buttonStyle(.pillSecondary).padding(.top, 4)
             }
         }
         .multilineTextAlignment(.center)
@@ -518,7 +520,7 @@ struct SelectionBar<Actions: View>: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.system(size: 14, weight: .semibold)).monospacedDigit()
                     .contentTransition(.numericText())
-                if !subtitle.isEmpty { Text(subtitle).caption().lineLimit(1) }
+                if !subtitle.isEmpty { Text(localized: subtitle).caption().lineLimit(1) }
             }
             Spacer(minLength: 12)
             actions
@@ -559,14 +561,16 @@ struct ConfirmAction: Identifiable {
     let action: () -> Void
 }
 
+/// `ConfirmAction`'s fields hold display-ready copy: callers pass `localized(...)` so a
+/// string with interpolation resolves to its `%@` / `%lld` key once, before it reaches here.
 extension View {
     func confirmation(_ item: Binding<ConfirmAction?>) -> some View {
         alert(item.wrappedValue?.title ?? "", isPresented: Binding(get: { item.wrappedValue != nil },
                                                                      set: { if !$0 { item.wrappedValue = nil } })) {
-            Button(item.wrappedValue?.button ?? "OK", role: .destructive) { item.wrappedValue?.action() }
+            Button(localized(item.wrappedValue?.button ?? "OK"), role: .destructive) { item.wrappedValue?.action() }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text(item.wrappedValue?.message ?? "")
+            Text(localized: item.wrappedValue?.message ?? "")
         }
     }
 }

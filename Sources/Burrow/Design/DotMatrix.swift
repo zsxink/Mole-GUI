@@ -75,7 +75,7 @@ struct MetricValue: View {
         }
         .animation(live ? nil : Motion.spring, value: value)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(unit.isEmpty ? value : "\(value) \(unit)")
+        .accessibilityLabel(unit.isEmpty ? value : "\(value) \(localized(unit))")
     }
 
     private func row(_ dot: CGFloat) -> some View {
@@ -90,7 +90,7 @@ struct MetricValue: View {
                     .transition(.blurFade)
             }
             if !unit.isEmpty {
-                Text(unit).font(.system(size: max(11, dot * 3), weight: .regular)).foregroundStyle(Theme.secondaryText)
+                Text(localized: unit).font(.system(size: max(11, dot * 3), weight: .regular)).foregroundStyle(Theme.secondaryText)
                     .lineLimit(1).fixedSize()
             }
         }

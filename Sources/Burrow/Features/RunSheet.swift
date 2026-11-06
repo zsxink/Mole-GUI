@@ -13,7 +13,7 @@ struct RunSheet: View {
         VStack(alignment: .leading, spacing: 20) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(session.title).font(.system(size: 22, weight: .semibold))
+                    Text(localized: session.title).font(.system(size: 22, weight: .semibold))
                     HStack(spacing: 6) {
                         Text(statusText)
                         if !session.isFinished { Text("·"); Elapsed(since: session.started) }
@@ -40,7 +40,7 @@ struct RunSheet: View {
                 .transition(.blurFade)
 
             HStack {
-                Button(showLog ? "Hide log" : "Show log") { showLog.toggle() }
+                Button(localized(showLog ? "Hide log" : "Show log")) { showLog.toggle() }
                     .buttonStyle(.pillSecondary)
                     .help("Mole's own output, line by line")
                 Spacer()
@@ -106,7 +106,7 @@ struct RunSheet: View {
                     Text(QuickReply.title(for: question)).cardTitle().lineLimit(3)
                     HStack(spacing: 10) {
                         ForEach(QuickReply.options(for: question), id: \.label) { option in
-                            Button(option.label) { session.reply(option.keys) }
+                            Button(localized(option.label)) { session.reply(option.keys) }
                                 .buttonStyle(option.primary ? .pill : .pillSecondary)
                                 .keyboardShortcut(option.primary ? .defaultAction : option.keys == "\u{1B}" ? .cancelAction : nil)
                         }
@@ -127,12 +127,14 @@ struct RunSheet: View {
     }
 
     private var statusText: String {
+        let key: String.LocalizationValue
         switch session.phase {
-        case .running: "Working…"
-        case .needsPassword: "Waiting for your password"
-        case .needsAnswer: "Waiting for you"
-        case .finished(let code): code == 0 ? "Finished" : code == 130 || code == 143 ? "Stopped" : "Mole stopped with code \(code)"
+        case .running: key = "Working…"
+        case .needsPassword: key = "Waiting for your password"
+        case .needsAnswer: key = "Waiting for you"
+        case .finished(let code): key = code == 0 ? "Finished" : code == 130 || code == 143 ? "Stopped" : "Mole stopped with code \(code)"
         }
+        return String(localized: key)
     }
 
     private var orbState: Orb.State {
@@ -234,18 +236,27 @@ private struct RunActivity: View {
 
     /// Mole's spinner text while it works; otherwise what the run is waiting for, or how it ended.
     private var activity: String {
+        let copy: String
         switch phase {
         case .running:
-            progress.now ?? progress.steps.last?.section.map { "Working on \($0.lowercased())" }
-                ?? (progress.steps.isEmpty ? "Starting Mole" : "Working")
-        case .needsPassword: "Waiting for your password"
-        case .needsAnswer: progress.review.isEmpty ? "Waiting for your answer" : "Check what Mole will remove, then confirm"
-        case .finished(let code) where code == 0 && progress.dryRun: "Preview only · nothing was removed"
+            // Mole's own spinner line is data: show it verbatim. Burrow's "Working on X" sentence
+            // is localizable copy, so it must be built with localizedFormat at THIS site — a
+            // materialized "Working on caches" String would miss the "Working on %@" table key.
+            if let now = progress.now { return now }
+            if let section = progress.steps.last?.section {
+                return localizedFormat("Working on \(section.lowercased())")
+            }
+            copy = progress.steps.isEmpty ? "Starting Mole" : "Working"
+        case .needsPassword: copy = "Waiting for your password"
+        case .needsAnswer: copy = progress.review.isEmpty ? "Waiting for your answer" : "Check what Mole will remove, then confirm"
+        case .finished(let code) where code == 0 && progress.dryRun: copy = "Preview only · nothing was removed"
         case .finished(let code) where code == 0:
-            idle ? "Nothing was changed"
-                : showsBytes ? "Freed \(progress.freed.bytesText) · \(count(done.count))" : "\(count(done.count)) done"
-        case .finished(let code): code == 130 || code == 143 ? "Stopped" : "Mole stopped early"
+            if idle { return localized("Nothing was changed") }
+            return showsBytes ? localizedFormat("Freed \(progress.freed.bytesText) · \(count(done.count))")
+                              : localizedFormat("\(count(done.count)) done")
+        case .finished(let code): copy = code == 130 || code == 143 ? "Stopped" : "Mole stopped early"
         }
+        return localized(copy)
     }
 
     /// The mark beside the status line when nothing is moving.
@@ -259,9 +270,13 @@ private struct RunActivity: View {
         }
     }
 
-    /// Apps for a run over apps (slim, uninstall), steps otherwise.
+    /// Apps for a run over apps (slim, uninstall), steps otherwise. Localize the fragment HERE:
+    /// it is fed as a `%@` argument into "Freed … · %@" / "%@ done", so a materialized "3 apps"
+    /// would stay English inside the otherwise-Chinese sentence.
     private func count(_ n: Int) -> String {
-        "\(n) \(progress.planned.isEmpty ? "step" : "app")\(n == 1 ? "" : "s")"
+        let suffix = n == 1 ? "" : "s"
+        return progress.planned.isEmpty ? localizedFormat("\(n) step\(suffix)")
+                                       : localizedFormat("\(n) app\(suffix)")
     }
 
     /// Freed against the plan; else items of the "[2/5]" counter. Full once Mole is done.
@@ -277,7 +292,7 @@ private struct RunActivity: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(alignment: .bottom) {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(showsBytes ? headline.caption : "Steps done").caption()
+                    Text(localized(showsBytes ? headline.caption : "Steps done")).caption()
                         .contentTransition(.opacity)
                     CountingValue(value: Double(showsBytes ? headline.value : Int64(done.count)), bytes: showsBytes)
                         .animation(Motion.reduced ? nil : .smooth(duration: 0.6), value: headline.value)
@@ -335,7 +350,7 @@ private struct RunActivity: View {
                         }
                         ForEach(progress.review.isEmpty ? upcoming : []) { item in
                             // After a run, what is still listed was left alone.
-                            StepRow(step: finished ? .init(id: item.id, kind: item.kind, section: nil, name: item.name, detail: "Kept", bytes: item.bytes) : item,
+                            StepRow(step: finished ? .init(id: item.id, kind: item.kind, section: nil, name: item.name, detail: localized("Kept"), bytes: item.bytes) : item,
                                     upcoming: true, current: working && (progress.now == item.name || progress.now?.hasSuffix(" " + item.name) == true),
                                     tint: glow.color)
                                 .id("planned-\(item.id)")
@@ -455,8 +470,8 @@ private struct StepRow: View {
         // The check pops in once the row is on screen.
         .onAppear { landed = true }
         .accessibilityElement(children: .combine)
-        .accessibilityValue(review ? "Will be removed" : upcoming ? (current ? "In progress" : "Waiting")
-            : step.kind == .done ? "Done" : step.kind == .failed ? "Failed" : "")
+        .accessibilityValue(localized(review ? "Will be removed" : upcoming ? (current ? "In progress" : "Waiting")
+            : step.kind == .done ? "Done" : step.kind == .failed ? "Failed" : ""))
     }
 
     /// The detail without the size shown on the right ("12 items, 1.2GB" → "12 items").
@@ -525,7 +540,7 @@ struct Orb: View {
             if state == .done || state == .failed { withAnimation(.easeOut(duration: 0.4)) { pulse = false } }
         }
         .accessibilityElement()
-        .accessibilityLabel(accessibilityText)
+        .accessibilityLabel(localized(accessibilityText))
     }
 
     private var accessibilityText: String {

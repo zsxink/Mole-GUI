@@ -95,6 +95,12 @@ Updates after that install without these steps.
 
 Requires macOS 26 or later on Apple silicon.
 
+The interface follows your macOS language: with Simplified Chinese as the preferred language the
+window and menu bar are in Chinese; every other language (including Traditional Chinese and
+English) falls back to English. There is no in-app language switch. Mole's own output, professional
+terms (CPU, RAM, GB, …) and brand names stay in English. Chinese copy lives in
+`Resources/zh-Hans.lproj/Localizable.strings`.
+
 Burrow updates itself: it checks the GitHub releases once a day ([Sparkle](https://sparkle-project.org),
 EdDSA-signed) and installs a new version when you quit. **Burrow → Check for Updates…** looks
 right away. Versions before 0.4.0 need one manual download.

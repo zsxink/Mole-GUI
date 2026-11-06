@@ -237,7 +237,7 @@ struct AnalyzePage: View {
         let rest = entries.dropFirst(big.count)
         var out = big.map { MapTile(id: $0.id, name: $0.name, size: $0.size, entry: $0) }
         if !rest.isEmpty {
-            out.append(MapTile(id: "other", name: "\(rest.count) more", size: rest.map(\.size).reduce(0, +), entry: nil))
+            out.append(MapTile(id: "other", name: localizedFormat("\(rest.count) more"), size: rest.map(\.size).reduce(0, +), entry: nil))
         }
         return out
     }
@@ -301,7 +301,7 @@ struct AnalyzePage: View {
                             .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(.black.opacity(0.55)))
                             .transition(.opacity)
                         } else if let error = map.error {
-                            EmptyState(symbol: "exclamationmark.triangle", text: "Mole could not map \(currentName)", detail: error,
+                            EmptyState(symbol: "exclamationmark.triangle", text: localizedFormat("Mole could not map \(currentName)"), detail: error,
                                        actionTitle: "Try again", action: map.reload)
                         } else if entries.isEmpty {
                             EmptyState(symbol: "square.grid.3x3", text: map.result == nil ? "Pick a place above to map it." : "This folder is empty.")
@@ -321,10 +321,10 @@ struct AnalyzePage: View {
 
     // MARK: - Whole-Mac overview
 
-    /// "~/Library", but a bare "~" reads as a typo: say what it is.
+    /// Abbreviated paths stay as paths: `Home`, `Library`, `Downloads` are protected folder names
+    /// (design D4), and a same-spelled table key would rewrite Mole-derived values elsewhere.
     private static func placeLabel(_ path: String) -> String {
-        let short = (path as NSString).abbreviatingWithTildeInPath
-        return short == "~" ? "Your home folder" : short
+        (path as NSString).abbreviatingWithTildeInPath
     }
 
     private var overview: some View {
@@ -372,7 +372,7 @@ struct AnalyzePage: View {
                                     Text((entry.path as NSString).abbreviatingWithTildeInPath).font(.system(size: 11)).foregroundStyle(Theme.tertiaryText)
                                 }
                                 Spacer()
-                                if entry.cleanable == true { Tag(text: "Clean can remove", color: Theme.accent) }
+                                if entry.cleanable == true { Tag(text: localized("Clean can remove"), color: Theme.accent) }
                                 Text(entry.size > 0 ? entry.size.bytesText : "–")
                                     .font(.system(size: 12.5)).monospacedDigit().frame(width: 84, alignment: .trailing)
                             }
@@ -495,15 +495,15 @@ struct AnalyzePage: View {
            FileManager.default.fileExists(atPath: entry.path) {
             Divider()
             Button("Move to Trash…", role: .destructive) {
-                confirm = .init(title: "Move \(entry.name) to the Trash?",
-                                message: "\(entry.size.bytesText) at \((entry.path as NSString).abbreviatingWithTildeInPath). You can restore it from the Trash.",
-                                button: "Move to Trash") {
+                confirm = .init(title: localizedFormat("Move \(entry.name) to the Trash?"),
+                                message: localizedFormat("\(entry.size.bytesText) at \((entry.path as NSString).abbreviatingWithTildeInPath). You can restore it from the Trash."),
+                                button: localized("Move to Trash")) {
                     if Trash.move([entry.path]).isEmpty {
                         trashError = nil
                         map.forgetAndReload()
                     } else {
                         withAnimation(Motion.quick) {
-                            trashError = "\(entry.name) could not be moved to the Trash. It may belong to macOS or another user."
+                            trashError = localizedFormat("\(entry.name) could not be moved to the Trash. It may belong to macOS or another user.")
                         }
                     }
                 }

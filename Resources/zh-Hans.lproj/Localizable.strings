@@ -1,0 +1,397 @@
+/* Burrow — Simplified Chinese (zh-Hans)
+   Keys are the English UI copy. Placeholders: %@ = String, %lld = Int, %lf = Double. */
+
+/* MARK: - App / menus / sidebar */
+"Overview" = "总览";
+"Clean" = "清理";
+"Uninstall" = "卸载";
+"Optimize" = "优化";
+"Disk Map" = "磁盘空间";
+"Projects" = "项目";
+"Installers" = "安装包";
+"Slim Apps" = "精简应用";
+"History" = "历史记录";
+"Settings" = "设置";
+"Go" = "前往";
+"Check for Updates…" = "检查更新…";
+"Open Burrow" = "打开 Burrow";
+"Quit Burrow" = "退出 Burrow";
+"Settings…" = "设置…";
+"More" = "更多";
+
+/* MARK: - Page subtitles */
+"Live health of this Mac" = "这台 Mac 的实时状态";
+"Caches, logs and leftovers of removed apps" = "缓存、日志，以及已删除应用留下的文件";
+"Remove apps with everything they left behind" = "连同残留文件一起卸载应用";
+"Refresh system caches and services" = "刷新系统缓存与服务";
+"See what takes the space" = "看看空间都被谁占了";
+"Build folders of projects you are not touching" = "久未打理的项目构建目录";
+"Disk images and packages you no longer need" = "不再需要的磁盘映像与安装包";
+"Drop the Intel half of universal apps" = "移除通用应用中的 Intel 部分";
+"Everything Mole changed, newest first" = "Mole 做过的每一次改动，最新在前";
+"Protection rules, scan folders, Touch ID, deleted apps" = "保护规则、扫描目录、Touch ID 与已删除应用";
+
+/* MARK: - Sidebar / engine / app termination */
+"Engine: Mole %@" = "引擎：Mole %@";
+"Scanning" = "正在扫描";
+"Mole is still working" = "Mole 仍在运行";
+"“%@” has not finished. Quitting stops it where it is." = "“%@”尚未完成。退出会让它停在当前进度。";
+"Keep Working" = "继续运行";
+"Stop and Quit" = "停止并退出";
+
+/* MARK: - Session / run titles */
+"Cleaning your Mac" = "正在清理这台 Mac";
+"Optimizing" = "正在优化";
+"Slimming apps" = "正在精简应用";
+"Preview uninstall" = "卸载预览";
+"Uninstalling" = "正在卸载";
+"Removing build folders" = "正在移除构建目录";
+"Touch ID for sudo" = "sudo 使用 Touch ID";
+
+/* MARK: - Quick-reply / prompt answers */
+"Continue" = "继续";
+"Skip" = "跳过";
+"Remove" = "移除";
+"Cancel" = "取消";
+"Yes" = "是";
+"No" = "否";
+"Space" = "空格";
+"Enter" = "回车";
+"Confirm" = "确认";
+"Slim" = "精简";
+"Delete" = "删除";
+"Purge" = "清除";
+
+/* MARK: - Memory pressure */
+"Normal" = "正常";
+"High" = "偏高";
+"Critical" = "紧张";
+/* A whole composite: the separator stays ASCII in English, full-width in Chinese. Building it
+   with a hardcoded "：" at the call site would leak that Chinese colon into the English fallback. */
+"Pressure: %@" = "内存压力：%@";
+"Memory pressure: %@" = "内存压力：%@";
+
+/* MARK: - Common controls / states */
+"Close" = "关闭";
+"On" = "开";
+"Off" = "关";
+"Manual" = "手动";
+"Preview" = "预览";
+"Interrupted" = "已中断";
+"Skipped" = "已跳过";
+"OK" = "好";
+"Rescan" = "重新扫描";
+"Recheck" = "重新检查";
+"Stop" = "停止";
+"Done" = "完成";
+"Reload" = "重新载入";
+"Restart" = "重新启动";
+"Search" = "搜索";
+"Open" = "打开";
+"Open Settings" = "打开设置";
+"None" = "无";
+"None yet" = "暂无";
+"Show previews and empty runs" = "显示预览和空运行";
+"Show previews" = "显示预览";
+"Show log" = "显示日志";
+"Hide log" = "隐藏日志";
+"Clear selection" = "清除选择";
+"Clear selection (Esc)" = "清除选择 (Esc)";
+"Clear search" = "清除搜索";
+"Scanning…" = "正在扫描…";
+"Looking…" = "正在查找…";
+"Not scanned" = "未扫描";
+"Not checked" = "未检查";
+"Not scanned yet" = "尚未扫描";
+"Not checked yet" = "尚未检查";
+"Mole is starting…" = "Mole 正在启动…";
+"Starting Mole…" = "正在启动 Mole…";
+"Starting Mole" = "正在启动 Mole";
+"Found so far" = "目前找到";
+"Check now" = "立即检查";
+"Try again" = "重试";
+"Mole could not finish" = "Mole 未能完成";
+"The last scan did not finish" = "上次扫描未完成";
+"Scan to see what Mole can free" = "扫描看看 Mole 能释放多少空间";
+"Checked just now" = "刚刚检查过";
+"Checked %@" = "检查于 %@";
+"step to run" = "个待执行步骤";
+"steps to run" = "个待执行步骤";
+"Select none" = "全不选";
+"Select all" = "全选";
+"Select every build folder in %@" = "选择 %@ 中的全部构建目录";
+"Select %@" = "选择 %@";
+"Collapse" = "收起";
+"Expand" = "展开";
+"Remove %@" = "移除 %@";
+"Choose a folder" = "选择文件夹";
+"Add a path" = "添加路径";
+"Search apps" = "搜索应用";
+"Search %lld apps" = "在 %lld 个应用中搜索";
+"Largest" = "按大小";
+"A–Z" = "A–Z";
+"Apps" = "应用";
+"Leftovers" = "残留文件";
+"Personal data too" = "同时删除个人数据";
+"Skip Trash" = "不放入废纸篓";
+"Search (⌘F)" = "搜索 (⌘F)";
+"Stop the scan (⌘R)" = "停止扫描 (⌘R)";
+"Scan again (⌘R)" = "重新扫描 (⌘R)";
+"Measure this folder again (⌘R)" = "重新测量此文件夹 (⌘R)";
+"Reload the app list" = "重新载入应用列表";
+"Finding your apps" = "正在查找应用";
+"Also remove the app's documents and settings Mole finds" = "同时移除 Mole 找到的该应用文稿与设置";
+"Delete for good instead of moving to the Trash" = "彻底删除，而不移入废纸篓";
+"See every file Mole would remove, without removing anything" = "预览 Mole 会移除的所有文件，不改动任何内容";
+"Show in Finder" = "在 Finder 中显示";
+"Size unknown" = "大小未知";
+"Mole lists this but leaves it to you" = "Mole 只列出，留给你自己处理";
+"Privacy & Security → Full Disk Access: turn on Burrow, then scan again" = "Privacy & Security → Full Disk Access：为 Burrow 开启后重新扫描";
+"Opens Disk Map" = "打开磁盘空间";
+"Opens Overview" = "打开总览";
+"Asks before Mole cleans" = "Mole 清理前会先询问";
+/* Whole-sentence accessibility label for the tray Clean shortcut button. English needs the
+   space after "Clean"; Chinese does not. One key handles both. */
+"Clean %@ · %@" = "清理%@ · %@";
+"Memory pressure" = "内存压力";
+"Pressure" = "内存压力";
+
+/* MARK: - Scan / run status text */
+"Working…" = "正在处理…";
+"Working" = "正在处理";
+"Waiting for your password" = "等待输入密码";
+"Waiting for you" = "等待你的操作";
+"Waiting for your answer" = "等待你的答复";
+"Finished" = "已完成";
+"Stopped" = "已停止";
+"Mole stopped with code %lld" = "Mole 已停止，退出码 %lld";
+"Mole stopped with code %lld." = "Mole 已停止，退出码 %lld。";
+"Mole stopped early" = "Mole 提前结束";
+"Nothing was changed" = "未做任何改动";
+"Nothing removed" = "未移除任何内容";
+"Would free" = "预计可释放";
+"To free" = "待释放";
+"Freed" = "已释放";
+"Freed so far" = "目前已释放";
+"Steps done" = "已完成步骤";
+"Item" = "项目";
+"Will be removed" = "将被移除";
+"In progress" = "进行中";
+"Waiting" = "等待中";
+"Failed" = "失败";
+"Kept" = "保留";
+"Preview only · nothing was removed" = "仅预览，未移除任何内容";
+"Check what Mole will remove, then confirm" = "核对 Mole 要移除的内容，然后确认";
+"Working on %@" = "正在处理 %@";
+"Mole's own output, line by line" = "Mole 的原始输出，逐行显示";
+"Stops Mole the way Ctrl-C would, so Mole cleans up after itself" = "像 Ctrl-C 那样停止 Mole，让它自行收尾";
+"Mole needs your administrator password for this step" = "这一步需要你的管理员密码";
+"Password" = "密码";
+"The password goes straight to macOS sudo and is never stored." = "密码直接交给 macOS sudo，不会被保存。";
+
+/* MARK: - Overview page */
+"Free space" = "可用空间";
+"Health score" = "健康度";
+"Memory" = "内存";
+"Battery" = "电池";
+"Network" = "网络";
+"Busiest processes" = "占用最高的进程";
+"%@ purgeable" = "%@ 可清理";
+"%@ free" = "%@ 可用";
+"%@ used" = "已用 %@";
+"%@ total" = "共 %@";
+"Load %@ · %lld procs" = "负载 %@ · %lld procs";
+"%@ of %@" = "%@ / %@";
+"No battery, on power" = "无电池，已接通电源";
+"Drawing %@ W" = "当前功耗 %@ W";
+"%@ used of %@" = "已用 %@ / 共 %@";
+"Reading the disk…" = "正在读取磁盘…";
+"%@ MB/s out" = "上行 %@ MB/s";
+"MB/s in" = "MB/s 下行";
+"Up %@" = "已运行 %@";
+"Health %lld" = "健康度 %lld";
+"Health score %lld of 100, %@" = "健康度 %lld / 100，%@";
+"Caches and logs" = "缓存与日志";
+"Project build folders" = "项目构建目录";
+"Old installers" = "旧安装包";
+"Live status stopped" = "实时状态已停止";
+"%lld file%@ in Downloads and more" = "下载目录等处共 %lld 个文件";
+
+/* MARK: - Clean / Optimize page */
+"Ready to clean" = "可以清理了";
+"Clean now" = "立即清理";
+"Include system caches" = "包含系统缓存";
+"Mole asks for your administrator password while cleaning" = "清理时 Mole 会要求输入管理员密码";
+"Protected paths" = "受保护的路径";
+"Nothing to clean right now." = "暂时没有可清理的内容。";
+"The preview did not finish" = "预览未完成";
+"Mole previews everything first. Nothing is removed until you press Clean." = "Mole 会先预览一切；按下「清理」之前不会移除任何内容。";
+"Files listed twice below are counted once." = "下方重复列出的文件只计一次。";
+"Clean %@?" = "清理 %@？";
+"Mole removes the caches and logs listed here. Protected paths are skipped." = "Mole 会移除此处列出的缓存和日志，受保护的路径会被跳过。";
+"Mole removes the caches and logs listed here. Protected paths are skipped. System caches need your administrator password." = "Mole 会移除此处列出的缓存和日志，受保护的路径会被跳过。系统缓存需要管理员密码。";
+"Maintenance" = "系统维护";
+"Performance diagnosis" = "性能诊断";
+"Preview: these steps run when you press Optimize." = "预览：按下「优化」后会执行这些步骤。";
+"The check did not finish" = "检查未完成";
+"Mole is looking at your system…" = "Mole 正在检查系统…";
+"Checking %@" = "正在检查 %@";
+"Checking…" = "正在检查…";
+"Finder, DNS, Spotlight, preferences and more. Mole asks before anything needs your password." = "Finder、DNS、Spotlight、偏好设置等。需要密码时 Mole 会先询问。";
+
+/* MARK: - Uninstall page */
+"No apps found." = "未找到应用。";
+"No app matches “%@”." = "没有匹配“%@”的应用。";
+"Mole could not list your apps" = "Mole 无法列出应用";
+"Sizes are the app bundles as Mole measured them. Leftovers are listed in the preview." = "大小由 Mole 测量应用包得出，残留文件会在预览中列出。";
+"%lld selected · %@" = "已选 %lld 项 · %@";
+"Uninstall %lld app%@?" = "卸载 %lld 个应用？";
+"Apps and their leftovers are deleted for good. Mole shows the full list and asks once more." = "应用及其残留文件会被彻底删除。Mole 会列出完整清单并再确认一次。";
+"Apps and their leftovers go to the Trash, so you can still restore them. Mole shows the full list and asks once more." = "应用及其残留文件会移入废纸篓，仍可恢复。Mole 会列出完整清单并再确认一次。";
+
+/* MARK: - Projects page */
+"Build folders found" = "找到的构建目录";
+"node_modules, .next, dist, target, .venv and other folders a reinstall or build brings back." = "node_modules、.next、dist、target、.venv 等重装或重新构建即可再生的目录。";
+"Moving folders to the Trash…" = "正在移入废纸篓…";
+"Looking in %@" = "正在查看 %@";
+"Scan folders" = "扫描目录";
+"Change scan folders" = "更改扫描目录";
+"Your whole home folder is a scan folder; it is too large to finish" = "整个个人文件夹都被设为扫描目录，范围太大难以完成";
+"No build folders in your scan folders." = "扫描目录中暂无构建目录。";
+"Projects looks in the folders listed in Settings." = "「项目」只查看设置中列出的目录。";
+"The scan did not finish" = "扫描未完成";
+"Mole removes them; a reinstall or build brings them back." = "由 Mole 移除；重装或重新构建即可恢复。";
+"They go to the Trash; a reinstall or build brings them back." = "它们会移入废纸篓；重装或重新构建也可恢复。";
+"Remove selected" = "移除所选";
+"Remove all %lld build folders?" = "移除全部 %lld 个构建目录？";
+"%@. Mole deletes them with its own safety checks and shows its final count before it starts." = "%@。Mole 会按自身的安全检查删除，并在开始前给出最终数量。";
+"%@. You can restore them from the Trash; a reinstall or build also recreates them." = "%@。可从废纸篓恢复；重装或重新构建也会重新生成。";
+
+/* MARK: - Installers page */
+"Installer files" = "安装包文件";
+"Looks in Downloads, Desktop, Documents, Mail and Telegram." = "查找下载、桌面、文稿、邮件与 Telegram 目录。";
+"Looking in Downloads, Desktop, Mail and Telegram" = "正在查找下载、桌面、邮件与 Telegram";
+"No installer files left behind." = "没有遗留的安装包。";
+"They go to the Trash, so you can put them back." = "它们会移入废纸篓，随时可以放回。";
+"Move to Trash" = "移入废纸篓";
+"Move %lld installer%@ to the Trash?" = "将 %lld 个安装包移入废纸篓？";
+"Move %lld build folder%@ to the Trash?" = "将 %lld 个构建目录移入废纸篓？";
+"%@. You can restore them from the Trash." = "%@。可从废纸篓恢复。";
+
+/* MARK: - Slim page */
+"Intel code in universal apps" = "通用应用中的 Intel 代码";
+"Each app is slimmed on a copy that must pass code signing and Gatekeeper first. App updates bring the Intel code back." = "每个应用都在副本上精简，且须先通过代码签名与 Gatekeeper 检查。应用更新会让 Intel 代码回来。";
+"Reading the architecture of every app" = "正在读取各应用的架构";
+"Every app is already Apple-silicon only." = "所有应用都已仅含 Apple-silicon 架构。";
+"%@ of Intel code" = "%@ Intel 代码";
+"Running apps are skipped, so quit them first. Mole shows the final list and waits for your confirmation." = "正在运行的应用会被跳过，请先退出。Mole 会列出最终清单并等待你确认。";
+"Originals go to the Trash after the slim copy passes its checks." = "精简副本通过检查后，原应用会移入废纸篓。";
+"Slim apps" = "精简应用";
+
+/* MARK: - Disk Map / Analyze page */
+"Map another folder…" = "映射其他文件夹…";
+"Mole is measuring %@…" = "Mole 正在测量 %@…";
+"Large folders take a minute ·" = "大文件夹需要一点时间 ·";
+"Mole could not map %@" = "Mole 无法映射 %@";
+"Pick a place above to map it." = "选择上方的位置开始映射。";
+"This folder is empty." = "此文件夹为空。";
+"These places overlap (your Home includes your Library and Downloads), so their sizes do not add up." = "这些位置相互重叠（~ 已包含 ~/Library 和 ~/Downloads），因此大小不能相加。";
+"Worth a look" = "值得留意";
+"Clean can remove" = "清理可移除";
+"This Mac" = "这台 Mac";
+"this Mac" = "这台 Mac";
+"Move to Trash…" = "移入废纸篓…";
+"Move %@ to the Trash?" = "将 %@ 移入废纸篓？";
+"%@ at %@. You can restore it from the Trash." = "%@，位于 %@。可从废纸篓恢复。";
+"%@ could not be moved to the Trash. It may belong to macOS or another user." = "%@ 无法移入废纸篓，可能属于 macOS 或其他用户。";
+"%lld more" = "另有 %lld 项";
+"%lld projects · %lld folders" = "%lld 个项目 · %lld 个目录";
+"%@ used on this Mac" = "这台 Mac 已用 %@";
+"%@ — %@" = "%@ — %@";
+"%@, %@" = "%@，%@";
+
+/* MARK: - History page */
+"Open Mole's logs" = "打开 Mole 日志";
+"Mole could not read its history" = "Mole 无法读取历史记录";
+"Reading Mole's history…" = "正在读取 Mole 历史记录…";
+"Nothing yet." = "还没有记录。";
+"No changes yet." = "还没有改动。";
+"Runs appear here after you clean, uninstall or optimize." = "清理、卸载或优化后，记录会出现在这里。";
+"%lld previews ran, but nothing was changed." = "已运行 %lld 次预览，但未做任何改动。";
+"%lld run%@" = "%lld 次运行";
+"%lld run%@ · %lld previews hidden" = "%1$lld 次运行 · 已隐藏 %3$lld 次预览";
+"%lld removed" = "已移除 %lld 项";
+"%lld to Trash" = "%lld 项移入废纸篓";
+"%lld skipped" = "已跳过 %lld 项";
+"%lld failed" = "%lld 项失败";
+"%lld rebuilt" = "已重建 %lld 项";
+"%lld items" = "%lld 项";
+
+/* MARK: - Settings page */
+"Clean, Optimize and Slim never touch these. Wildcards like * work." = "清理、优化、精简都不会动这些路径，支持 * 通配符。";
+"Project scan folders" = "项目扫描目录";
+"Where Projects looks for build folders." = "「项目」在此查找构建目录。";
+"Your whole home folder is slow to scan and can time out. Project folders work best." = "扫描整个个人文件夹很慢且可能超时，建议只填项目目录。";
+"Touch ID for admin steps" = "管理员步骤使用 Touch ID";
+"Approve Mole's administrator steps with your fingerprint instead of typing the password. Changing it asks for your password once." = "用指纹代替密码批准 Mole 的管理员操作。更改此设置需输入一次密码。";
+"Turn off" = "关闭";
+"Turn on" = "开启";
+"About" = "关于";
+"A free, open-source window for Mole %@, the macOS cleaner by tw93. Clean, Uninstall, Optimize, Slim and removing all build folders run through Mole and its safety checks; installers, single build folders and Disk Map items you pick go to the Trash." = "这是 tw93 的 macOS 清理工具 Mole %@ 的免费开源图形界面。清理、卸载、优化、精简及移除全部构建目录都经 Mole 及其安全检查执行；安装包、单个构建目录以及你在磁盘空间中挑选的项目则移入废纸篓。";
+"Licensed GPL-3.0, like Mole." = "与 Mole 一样采用 GPL-3.0 许可。";
+"Mole on GitHub" = "GitHub 上的 Mole";
+"Mole's logs" = "Mole 日志";
+"When you delete an app" = "删除应用时";
+"Burrow spots the files a deleted app leaves behind and offers to move them to the Trash. To notice in time, it keeps running after you close its window." = "Burrow 会找出已删除应用遗留的文件并询问是否移入废纸篓。为及时察觉，关闭窗口后它仍会继续运行。";
+"Offer to clean up" = "询问是否清理残留";
+"Show in menu bar" = "在菜单栏显示";
+"Start Burrow at login" = "登录时启动 Burrow";
+
+/* MARK: - Leftovers (Uninstall tab) */
+"Leftovers of removed apps" = "已删除应用的残留";
+"Caches, logs and web data unused for a week; settings and data too while the app is in the Trash or was just deleted. Everything goes to the Trash." = "一周未用的缓存、日志与网页数据；应用已在废纸篓或刚被删除时，其设置与数据也一并列出。全部移入废纸篓。";
+"Looking through your Library" = "正在查看资源库";
+"No leftovers of removed apps." = "没有已删除应用的残留。";
+"Their leftovers go to the Trash, so you can put them back." = "残留文件会移入废纸篓，随时可以放回。";
+"Move what %lld removed app%@ left to the Trash?" = "将这 %lld 个已删除应用留下的文件移入废纸篓？";
+"Cache" = "缓存";
+"Logs" = "日志";
+"Window state" = "窗口状态";
+"Web data" = "网页数据";
+"App data" = "应用数据";
+"Show %@ in Finder" = "在 Finder 中显示%@";
+"Changed %@ · %@" = "%@有变动 · %@";
+
+/* MARK: - Removed-app offer (menu bar panel) */
+"%@ was removed" = "%@ 已被删除";
+"%lld apps were removed" = "已删除 %lld 个应用";
+"It left %@ behind: %@." = "留下 %@：%@。";
+"%lld item%@ could not be moved. Open Burrow to see them." = "%lld 项无法移入废纸篓，可打开 Burrow 查看。";
+"Nothing was moved: the app is back, or its files are in use again." = "未移动任何内容：应用已恢复，或文件又被占用。";
+"Moved %@ to the Trash. You can put it back from there." = "已将 %@ 移入废纸篓，可从中放回。";
+"Not now" = "以后再说";
+
+/* MARK: - Shared selection bars / error notes */
+"%lld app%@ · %@" = "%1$lld 个应用 · %3$@";
+"%lld file%@ · %@" = "%1$lld 个文件 · %3$@";
+"%lld folder%@ · %@" = "%1$lld 个目录 · %3$@";
+"%lld app%@" = "%lld 个应用";
+"%lld file%@" = "%lld 个文件";
+"%lld folder%@" = "%lld 个目录";
+"%lld item%@" = "%lld 项";
+"%lld disk image%@ and packages in Downloads, Desktop, Mail and Telegram." = "下载、桌面、邮件与 Telegram 中共 %lld 个磁盘映像与安装包。";
+"%lld app%@ gone left files behind. " = "%lld 个已删除的应用留下了文件。";
+"%lld item%@ could not be moved to the Trash." = "%lld 项无法移入废纸篓。";
+"%lld item%@, %@. You can restore them from the Trash." = "%1$lld 项，%3$@。可从废纸篓恢复。";
+"%lld file%@ could not be moved to the Trash: %@" = "%1$lld 个文件无法移入废纸篓：%3$@";
+"%lld folder%@ could not be moved to the Trash" = "%lld 个目录无法移入废纸篓";
+"%lld app%@ that is gone left files behind. " = "%lld 个已删除的应用留下了文件。";
+"%lld apps that are gone left files behind. " = "%lld 个已删除的应用留下了文件。";
+"Freed %@ · %@" = "已释放 %@ · %@";
+"%@ done" = "已完成 %@";
+"step" = "步骤";
+"app" = "应用";
+/* Fragment fed as a %@ argument into "Freed … · %@" / "%@ done" (RunSheet.count).
+   "%lld app%@" is already defined above. */
+"%lld step%@" = "%lld 个步骤";
+
